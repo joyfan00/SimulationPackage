@@ -96,7 +96,7 @@ class mSSP(Model):
                     sd = 0.001
                 s_ta = ((1 + math.erf((.5 - 0) / sd / np.sqrt(2))) / 2) - ((1 + math.erf((-.5 - 0) / sd / np.sqrt(2))) / 2)
                 s_fl = 1 - s_ta
-                delta_noise = np.random.choice(noise)
+                delta_noise = np.random.choice(noise) * np.sqrt(dt)
                 delta_noise = delta_noise*(np.exp(-1*(eta_r/2)*((t-tau))))
                 if congruencylist[n] == 'incongruent':
                     delta = s_ta*p - s_fl*p

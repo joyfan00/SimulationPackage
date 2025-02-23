@@ -91,7 +91,7 @@ class SSPit(Model):
                     delta = s_ta*p - s_fl*p
                 else:
                     delta = s_ta*p + s_fl*p
-                evidence += (delta*dt + np.random.choice(noise)) # add one of the many possible updates to evidence
+                evidence += (delta*dt + np.random.choice(noise) * np.sqrt(dt)) # add one of the many possible updates to evidence
                 t += dt 
             if evidence > alpha/2:
                 choicelist[n] = 1 # choose the upper threshold action

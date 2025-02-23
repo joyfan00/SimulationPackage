@@ -97,7 +97,7 @@ class mDMCfs(Model):
                 else:
                     delta = (-peak_amplitude * np.exp(-(t / characteristic_time)) *
                             np.power(((t * np.exp(1)) / ((shape - 1) * characteristic_time)), (shape - 1)) * (((shape - 1) / t) - (1 / characteristic_time))) + mu_c
-                delta_noise = np.random.choice(update_jitter)
+                delta_noise = np.random.choice(update_jitter) * np.sqrt(dt)
                 delta_noise = delta_noise*(np.exp(-1*(eta_r/2)*((t-tau))))
                 
                 evidence += delta*dt + delta_noise

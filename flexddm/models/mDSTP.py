@@ -104,8 +104,8 @@ class mDSTP(Model):
             evidenceRS1 = betaRS*alphaRS - (1-betaRS)*alphaRS
             np.random.seed(n)
             while (evidenceSS < alphaSS/2 and evidenceSS > -alphaSS/2) or (evidenceRS1 < alphaRS/2 and evidenceRS1 > -alphaRS/2): # keep accumulating evidence until you reach a threshold
-                delta_noise_SS = np.random.choice(update_jitter_SS)
-                delta_noise_RS1 = np.random.choice(update_jitter_RS1)
+                delta_noise_SS = np.random.choice(update_jitter_SS) * np.sqrt(dt)
+                delta_noise_RS1 = np.random.choice(update_jitter_RS1) * np.sqrt(dt)
                 delta_noise_SS = delta_noise_SS*(np.exp(-1*(eta_r/2)*((t-tau))))
                 delta_noise_RS1 = delta_noise_RS1*(np.exp(-1*(eta_r/2)*((t-tau))))
                 evidenceSS += deltaSS*dt + delta_noise_SS # add one of the many possible updates to evidence
@@ -126,7 +126,7 @@ class mDSTP(Model):
                     deltaRS = -1 * deltaRS
                 evidenceRS2 = evidenceRS1 # start where you left off from RS1
                 while (evidenceRS2 < alphaRS/2 and evidenceRS2 > -alphaRS/2): # keep accumulating evidence until you reach a threshold
-                    delta_noise_RS2 = np.random.choice(update_jitter_RS2)
+                    delta_noise_RS2 = np.random.choice(update_jitter_RS2) * np.sqrt(dt)
                     delta_noise_RS2 = delta_noise_RS2*(np.exp(-1*(eta_r/2)*((t-tau))))
                     evidenceRS2 += deltaRS*dt + delta_noise_RS2
                     t += dt # increment time by the unit dt

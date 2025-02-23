@@ -94,7 +94,7 @@ class DMCfs(Model):
                 else:
                     delta = (-peak_amplitude * np.exp(-(t / characteristic_time)) *
                             np.power(((t * np.exp(1)) / ((shape - 1) * characteristic_time)), (shape - 1)) * (((shape - 1) / t) - (1 / characteristic_time))) + mu_c
-                evidence += delta*dt + np.random.choice(update_jitter)
+                evidence += delta*dt + np.random.choice(update_jitter) * np.sqrt(dt)
                 t += dt # increment time by the unit dt
                 if evidence > alpha/2:
                     choicelist[n] = 1

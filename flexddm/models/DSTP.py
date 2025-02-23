@@ -95,8 +95,8 @@ class DSTP(Model):
             evidenceRS1 = betaRS*alphaRS - (1-betaRS)*alphaRS
             np.random.seed(n)
             while (evidenceSS < alphaSS/2 and evidenceSS > -alphaSS/2) or (evidenceRS1 < alphaRS/2 and evidenceRS1 > -alphaRS/2): # keep accumulating evidence until you reach a threshold
-                evidenceSS += deltaSS*dt + np.random.choice(update_jitter) # add one of the many possible updates to evidence
-                evidenceRS1 += deltaRS1*dt + np.random.choice(update_jitter)
+                evidenceSS += deltaSS*dt + np.random.choice(update_jitter) * np.sqrt(dt) # add one of the many possible updates to evidence
+                evidenceRS1 += deltaRS1*dt + np.random.choice(update_jitter) * np.sqrt(dt)
                 t += dt # increment time by the unit dt
             if evidenceRS1 > alphaRS/2:
                 choicelist[n] = 1 # choose the upper threshold action
@@ -113,7 +113,7 @@ class DSTP(Model):
                     deltaRS = -1 * deltaRS
                 evidenceRS2 = evidenceRS1 # start where you left off from RS1
                 while (evidenceRS2 < alphaRS/2 and evidenceRS2 > -alphaRS/2): # keep accumulating evidence until you reach a threshold
-                    evidenceRS2 += deltaRS*dt + np.random.choice(update_jitter)
+                    evidenceRS2 += deltaRS*dt + np.random.choice(update_jitter) * np.sqrt(dt)
                     t += dt # increment time by the unit dt
                 if evidenceRS2 > alphaRS/2:
                     choicelist[n] = 1 # choose the upper threshold action
