@@ -56,7 +56,7 @@ class SSPit(Model):
     @nb.jit(nopython=True, cache=True, parallel=False, fastmath=True, nogil=True)
     def model_simulation(alpha, beta, p, sd_0_sd_r_ratio, tau, dt=DT, var=VAR, nTrials=NTRIALS, noiseseed=NOISESEED):
         """
-        Performs simulations for SSP model.
+        Performs simulations for SSPit model.
         @alpha (float): boundary separation
         @beta (float): initial bias
         @p (float): perceptual input of the stimulus
@@ -91,7 +91,7 @@ class SSPit(Model):
                     delta = s_ta*p - s_fl*p
                 else:
                     delta = s_ta*p + s_fl*p
-                evidence += (delta*dt + np.random.choice(noise)) # add one of the many possible updates to evidence
+                evidence += (delta*dt + np.random.choice(noise) * np.sqrt(dt)) # add one of the many possible updates to evidence
                 t += dt 
             if evidence > alpha/2:
                 choicelist[n] = 1 # choose the upper threshold action

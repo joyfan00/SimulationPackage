@@ -67,12 +67,12 @@ class mDSTP(Model):
         Performs simulations for DSTP model.
         @alphaSS (float): boundary separation for stimulus selection phase
         @betaSS (float): initial bias for stimulus selection phase
-        @deltaSS (float): drift rate for stimulus selection phase
+        @etaSS (float): scaling factor for stimulus selection noise
         @alphaRS (float): boundary separation for response selection phase 
-        @betaRS (float): inital bias for response selection phase 
-        @delta_target (float): drift rate for target arrow during response selection BEFORE stimulus is selected 
-        @delta_flanker (float): drift rate for flanker arrows during response selection BEFORE stimulus is selected
-        @deltaRS (float): drift rate for the reponse selection phase after a stimulus (either flanker or target) has been selected
+        @betaRS (float): initial bias for response selection phase 
+        @etaS1 (float): scaling factor for response selection noise (phase 1)
+        @etaS2 (float): scaling factor for response selection noise (phase 2)
+        @eta_r (float): decay rate for noise scaling
         @tau (float): non-decision time
         @dt (float): change in time 
         @var (float): variance
@@ -104,8 +104,8 @@ class mDSTP(Model):
             evidenceRS1 = betaRS*alphaRS - (1-betaRS)*alphaRS
             np.random.seed(n)
             while (evidenceSS < alphaSS/2 and evidenceSS > -alphaSS/2) or (evidenceRS1 < alphaRS/2 and evidenceRS1 > -alphaRS/2): # keep accumulating evidence until you reach a threshold
-                delta_noise_SS = np.random.choice(update_jitter_SS)
-                delta_noise_RS1 = np.random.choice(update_jitter_RS1)
+                delta_noise_SS = np.random.choice(update_jitter_SS) * np.sqrt(dt)
+                delta_noise_RS1 = np.random.choice(update_jitter_RS1) * np.sqrt(dt)
                 delta_noise_SS = delta_noise_SS*(np.exp(-1*(eta_r/2)*((t-tau))))
                 delta_noise_RS1 = delta_noise_RS1*(np.exp(-1*(eta_r/2)*((t-tau))))
                 evidenceSS += deltaSS*dt + delta_noise_SS # add one of the many possible updates to evidence
@@ -126,7 +126,7 @@ class mDSTP(Model):
                     deltaRS = -1 * deltaRS
                 evidenceRS2 = evidenceRS1 # start where you left off from RS1
                 while (evidenceRS2 < alphaRS/2 and evidenceRS2 > -alphaRS/2): # keep accumulating evidence until you reach a threshold
-                    delta_noise_RS2 = np.random.choice(update_jitter_RS2)
+                    delta_noise_RS2 = np.random.choice(update_jitter_RS2) * np.sqrt(dt)
                     delta_noise_RS2 = delta_noise_RS2*(np.exp(-1*(eta_r/2)*((t-tau))))
                     evidenceRS2 += deltaRS*dt + delta_noise_RS2
                     t += dt # increment time by the unit dt

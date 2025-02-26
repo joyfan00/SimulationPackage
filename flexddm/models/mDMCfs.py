@@ -63,8 +63,8 @@ class mDMCfs(Model):
         Performs simulations for DMC model. 
         @alpha (float): boundary separation
         @beta (float): initial bias
-        @mu_c (float): drift rate of the controlled process
-        @shape (float): shape parameter of gamma distribution function used to model the time-course of automatic activation 
+        @eta (float): drift rate modulation by congruency
+        @eta_r (float): drift rate modulation by response
         @characteristic_time (float): duration of the automatic process
         @peak_amplitude (float): amplitude of automatic activation
         @tau (float): non-decision time
@@ -97,7 +97,7 @@ class mDMCfs(Model):
                 else:
                     delta = (-peak_amplitude * np.exp(-(t / characteristic_time)) *
                             np.power(((t * np.exp(1)) / ((shape - 1) * characteristic_time)), (shape - 1)) * (((shape - 1) / t) - (1 / characteristic_time))) + mu_c
-                delta_noise = np.random.choice(update_jitter)
+                delta_noise = np.random.choice(update_jitter) * np.sqrt(dt)
                 delta_noise = delta_noise*(np.exp(-1*(eta_r/2)*((t-tau))))
                 
                 evidence += delta*dt + delta_noise

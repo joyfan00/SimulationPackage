@@ -56,13 +56,12 @@ class DMCfs(Model):
 
 
     @nb.jit(nopython=True, cache=True, parallel=False, fastmath=True, nogil=True)
-    def model_simulation(alpha, beta, mu_c, characteristic_time, peak_amplitude, tau, dt=DT, var=VAR, nTrials=NTRIALS, noiseseed=NOISESEED,):
+    def model_simulation(alpha, beta, mu_c, characteristic_time, peak_amplitude, tau, dt=DT, var=VAR, nTrials=NTRIALS, noiseseed=NOISESEED):
         """
         Performs simulations for DMC model. 
         @alpha (float): boundary separation
         @beta (float): initial bias
         @mu_c (float): drift rate of the controlled process
-        @shape (float): shape parameter of gamma distribution function used to model the time-course of automatic activation 
         @characteristic_time (float): duration of the automatic process
         @peak_amplitude (float): amplitude of automatic activation
         @tau (float): non-decision time
@@ -94,7 +93,7 @@ class DMCfs(Model):
                 else:
                     delta = (-peak_amplitude * np.exp(-(t / characteristic_time)) *
                             np.power(((t * np.exp(1)) / ((shape - 1) * characteristic_time)), (shape - 1)) * (((shape - 1) / t) - (1 / characteristic_time))) + mu_c
-                evidence += delta*dt + np.random.choice(update_jitter)
+                evidence += delta*dt + np.random.choice(update_jitter) * np.sqrt(dt)
                 t += dt # increment time by the unit dt
                 if evidence > alpha/2:
                     choicelist[n] = 1

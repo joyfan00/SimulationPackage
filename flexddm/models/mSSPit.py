@@ -61,7 +61,8 @@ class mSSPit(Model):
         Performs simulations for SSP model.
         @alpha (float): boundary separation
         @beta (float): initial bias
-        @p (float): perceptual input of the stimulus
+        @eta (float): noise scaling factor
+        @eta_r (float): noise reduction rate
         @sd_0_sd_r_ratio (float): ratio of the initial standard deviation of the Gaussian distribution describing the attentional spotlight and shrinking rate (i.e. interference time) 
         @tau (float): non-decision time
         @dt (float): change in time 
@@ -93,7 +94,7 @@ class mSSPit(Model):
                     sd = 0.001
                 s_ta = ((1 + math.erf((.5 - 0) / sd / np.sqrt(2))) / 2) - ((1 + math.erf((-.5 - 0) / sd / np.sqrt(2))) / 2)
                 s_fl = 1 - s_ta
-                delta_noise = np.random.choice(noise)
+                delta_noise = np.random.choice(noise) * np.sqrt(dt)
                 delta_noise = delta_noise*(np.exp(-1*(eta_r/2)*((t-tau))))
                 if congruencylist[n] == 'incongruent':
                     delta = s_ta*p - s_fl*p
